@@ -3,20 +3,34 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: SautiOS - Music management platform for East African artists
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: artist
+    description: Artist profile
+  - name: songs
+    description: Song catalog management
+  - name: royalties
+    description: Royalty transactions and payouts
+  - name: contracts
+    description: Contract management
+  - name: events
+    description: Event and ticket management
+  - name: airplay
+    description: Airplay detection and COSOTA claims
+  - name: dashboard
+    description: Dashboard summary and analytics
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +38,327 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /me:
+    get:
+      operationId: getArtist
+      tags: [artist]
+      summary: Get current artist profile
+      responses:
+        "200":
+          description: Artist profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Artist"
+
+  /songs:
+    get:
+      operationId: listSongs
+      tags: [songs]
+      summary: List all songs for the current artist
+      responses:
+        "200":
+          description: List of songs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Song"
+    post:
+      operationId: createSong
+      tags: [songs]
+      summary: Add a new song to the catalog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSongBody"
+      responses:
+        "201":
+          description: Created song
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Song"
+
+  /songs/{id}:
+    patch:
+      operationId: updateSong
+      tags: [songs]
+      summary: Update a song
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSongBody"
+      responses:
+        "200":
+          description: Updated song
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Song"
+
+  /royalties:
+    get:
+      operationId: listRoyalties
+      tags: [royalties]
+      summary: List royalty transactions
+      responses:
+        "200":
+          description: List of royalty transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoyaltyTransaction"
+
+  /royalties/withdraw:
+    post:
+      operationId: createWithdrawal
+      tags: [royalties]
+      summary: Request a withdrawal to M-Pesa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWithdrawalBody"
+      responses:
+        "201":
+          description: Withdrawal transaction created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoyaltyTransaction"
+
+  /contracts:
+    get:
+      operationId: listContracts
+      tags: [contracts]
+      summary: List all contracts
+      responses:
+        "200":
+          description: List of contracts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contract"
+    post:
+      operationId: createContract
+      tags: [contracts]
+      summary: Create a new contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContractBody"
+      responses:
+        "201":
+          description: Created contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+
+  /contracts/{id}:
+    patch:
+      operationId: updateContract
+      tags: [contracts]
+      summary: Update a contract
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContractBody"
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+
+  /events:
+    get:
+      operationId: listEvents
+      tags: [events]
+      summary: List all events
+      responses:
+        "200":
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+    post:
+      operationId: createEvent
+      tags: [events]
+      summary: Create a new event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventBody"
+      responses:
+        "201":
+          description: Created event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /events/{id}:
+    patch:
+      operationId: updateEvent
+      tags: [events]
+      summary: Update an event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEventBody"
+      responses:
+        "200":
+          description: Updated event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /events/{id}/tickets:
+    post:
+      operationId: sellTicket
+      tags: [events]
+      summary: Sell a ticket for an event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SellTicketBody"
+      responses:
+        "201":
+          description: Ticket purchase record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketPurchase"
+
+  /airplay:
+    get:
+      operationId: listAirplay
+      tags: [airplay]
+      summary: List airplay detections
+      responses:
+        "200":
+          description: List of airplay detections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AirplayDetection"
+
+  /airplay/{id}/claim:
+    post:
+      operationId: claimAirplay
+      tags: [airplay]
+      summary: Submit a COSOTA claim for an airplay detection
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Updated airplay detection with claim ref
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AirplayDetection"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/earnings-chart:
+    get:
+      operationId: getEarningsChart
+      tags: [dashboard]
+      summary: Get monthly earnings chart data
+      responses:
+        "200":
+          description: Monthly earnings array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MonthlyEarning"
+
+  /dashboard/platform-breakdown:
+    get:
+      operationId: getPlatformBreakdown
+      tags: [dashboard]
+      summary: Get per-platform earnings breakdown
+      responses:
+        "200":
+          description: Platform earnings array
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlatformEarning"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +366,478 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    Artist:
+      type: object
+      properties:
+        id:
+          type: string
+        stageName:
+          type: string
+        legalName:
+          type: string
+          nullable: true
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        genre:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        locationCountry:
+          type: string
+        locationCity:
+          type: string
+          nullable: true
+        tier:
+          type: string
+          enum: [free, pro, label]
+        cosotaMemberId:
+          type: string
+          nullable: true
+        walletBalanceUsd:
+          type: number
+        walletBalanceTzs:
+          type: number
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+      required: [id, stageName, email, locationCountry, tier, walletBalanceUsd, walletBalanceTzs, isActive, createdAt]
+
+    Song:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        isrc:
+          type: string
+          nullable: true
+        genre:
+          type: string
+          nullable: true
+        releaseDate:
+          type: string
+          nullable: true
+        durationSeconds:
+          type: number
+          nullable: true
+        status:
+          type: string
+          enum: [unregistered, pending_cosota, active, suspended]
+        cosotaRef:
+          type: string
+          nullable: true
+        totalStreams:
+          type: number
+        totalRoyaltiesUsd:
+          type: number
+        platforms:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required: [id, title, status, totalStreams, totalRoyaltiesUsd, platforms, createdAt]
+
+    CreateSongBody:
+      type: object
+      properties:
+        title:
+          type: string
+        genre:
+          type: string
+        releaseDate:
+          type: string
+          nullable: true
+        durationSeconds:
+          type: number
+          nullable: true
+        platforms:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+          nullable: true
+      required: [title]
+
+    UpdateSongBody:
+      type: object
+      properties:
+        title:
+          type: string
+        genre:
+          type: string
+        status:
+          type: string
+          enum: [unregistered, pending_cosota, active, suspended]
+        platforms:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+          nullable: true
+
+    RoyaltyTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+        transactionType:
+          type: string
+        platform:
+          type: string
+          nullable: true
+        amountUsd:
+          type: number
+        amountTzs:
+          type: number
+          nullable: true
+        feeUsd:
+          type: number
+        netUsd:
+          type: number
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        reference:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        periodStart:
+          type: string
+          nullable: true
+        periodEnd:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required: [id, transactionType, amountUsd, feeUsd, netUsd, status, createdAt]
+
+    CreateWithdrawalBody:
+      type: object
+      properties:
+        amountUsd:
+          type: number
+        mpesaNumber:
+          type: string
+      required: [amountUsd, mpesaNumber]
+
+    Contract:
+      type: object
+      properties:
+        id:
+          type: string
+        contractType:
+          type: string
+          enum: [performance, brand_deal, sync_license, management, distribution]
+        title:
+          type: string
+        counterparty:
+          type: string
+        counterpartyEmail:
+          type: string
+          nullable: true
+        valueUsd:
+          type: number
+          nullable: true
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [draft, pending_signature, active, completed, cancelled, disputed]
+        signedDate:
+          type: string
+          nullable: true
+        startDate:
+          type: string
+          nullable: true
+        endDate:
+          type: string
+          nullable: true
+        termsText:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required: [id, contractType, title, counterparty, currency, status, createdAt]
+
+    CreateContractBody:
+      type: object
+      properties:
+        contractType:
+          type: string
+          enum: [performance, brand_deal, sync_license, management, distribution]
+        title:
+          type: string
+        counterparty:
+          type: string
+        counterpartyEmail:
+          type: string
+          nullable: true
+        valueUsd:
+          type: number
+          nullable: true
+        currency:
+          type: string
+        startDate:
+          type: string
+          nullable: true
+        endDate:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+      required: [contractType, title, counterparty, currency]
+
+    UpdateContractBody:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [draft, pending_signature, active, completed, cancelled, disputed]
+        signedDate:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        venue:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country:
+          type: string
+        eventDate:
+          type: string
+        doorsOpen:
+          type: string
+          nullable: true
+        capacity:
+          type: number
+        ticketsSold:
+          type: number
+        ticketPriceTzs:
+          type: number
+          nullable: true
+        ticketPriceUsd:
+          type: number
+          nullable: true
+        status:
+          type: string
+          enum: [draft, on_sale, sold_out, completed, cancelled]
+        totalRevenueTzs:
+          type: number
+        platformFeePct:
+          type: number
+        createdAt:
+          type: string
+      required: [id, name, country, eventDate, capacity, ticketsSold, status, totalRevenueTzs, platformFeePct, createdAt]
+
+    CreateEventBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        venue:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country:
+          type: string
+        eventDate:
+          type: string
+        doorsOpen:
+          type: string
+          nullable: true
+        capacity:
+          type: number
+        ticketPriceTzs:
+          type: number
+          nullable: true
+        ticketPriceUsd:
+          type: number
+          nullable: true
+      required: [name, country, eventDate, capacity]
+
+    UpdateEventBody:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [draft, on_sale, sold_out, completed, cancelled]
+        description:
+          type: string
+          nullable: true
+        venue:
+          type: string
+          nullable: true
+
+    SellTicketBody:
+      type: object
+      properties:
+        buyerName:
+          type: string
+        buyerPhone:
+          type: string
+        buyerEmail:
+          type: string
+          nullable: true
+        quantity:
+          type: number
+        paymentMethod:
+          type: string
+        mpesaRef:
+          type: string
+          nullable: true
+      required: [buyerName, buyerPhone, quantity, paymentMethod]
+
+    TicketPurchase:
+      type: object
+      properties:
+        id:
+          type: string
+        eventId:
+          type: string
+        buyerName:
+          type: string
+        buyerPhone:
+          type: string
+        buyerEmail:
+          type: string
+          nullable: true
+        quantity:
+          type: number
+        totalTzs:
+          type: number
+        paymentMethod:
+          type: string
+        mpesaRef:
+          type: string
+          nullable: true
+        ticketCode:
+          type: string
+        checkedIn:
+          type: boolean
+        createdAt:
+          type: string
+      required: [id, eventId, buyerName, buyerPhone, quantity, totalTzs, paymentMethod, ticketCode, checkedIn, createdAt]
+
+    AirplayDetection:
+      type: object
+      properties:
+        id:
+          type: string
+        songId:
+          type: string
+        songTitle:
+          type: string
+        stationName:
+          type: string
+        stationType:
+          type: string
+          enum: [radio, tv, streaming]
+        country:
+          type: string
+        detectedAt:
+          type: string
+        durationSeconds:
+          type: number
+          nullable: true
+        claimed:
+          type: boolean
+        cosotaClaimRef:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+      required: [id, songId, songTitle, stationName, stationType, country, detectedAt, claimed, createdAt]
+
+    DashboardSummary:
+      type: object
+      properties:
+        walletBalanceUsd:
+          type: number
+        walletBalanceTzs:
+          type: number
+        totalStreams:
+          type: number
+        totalRoyaltiesUsd:
+          type: number
+        pendingCosotaCount:
+          type: number
+        unregisteredCount:
+          type: number
+        totalSongs:
+          type: number
+        activeContracts:
+          type: number
+        pendingContractValue:
+          type: number
+        upcomingEvents:
+          type: number
+        uncollectedAirplay:
+          type: number
+        totalEarningsThisMonth:
+          type: number
+      required: [walletBalanceUsd, walletBalanceTzs, totalStreams, totalRoyaltiesUsd, pendingCosotaCount, unregisteredCount, totalSongs, activeContracts, pendingContractValue, upcomingEvents, uncollectedAirplay, totalEarningsThisMonth]
+
+    MonthlyEarning:
+      type: object
+      properties:
+        month:
+          type: string
+        earned:
+          type: number
+        streams:
+          type: number
+      required: [month, earned, streams]
+
+    PlatformEarning:
+      type: object
+      properties:
+        name:
+          type: string
+        amount:
+          type: number
+        streams:
+          type: number
+        color:
+          type: string
+      required: [name, amount, streams, color]
