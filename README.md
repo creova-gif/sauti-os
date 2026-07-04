@@ -68,3 +68,8 @@ Proprietary — All Rights Reserved. See `LICENSE`.
 ## Credits
 
 Built by CREOVA. Product lead: Justin Mafie.
+
+
+## Related Products
+
+This is one of three connected CREOVA products forming a single East African fintech / creator-economy thesis: the business logic layer that calculates what artists are owed and why. See [Gopay](https://github.com/creova-gif/Gopay), [Kultr-Hub](https://github.com/creova-gif/Kultr-Hub), and the full [East Africa Fintech Thesis](https://github.com/creova-gif/CREOVA/blob/main/EAST-AFRICA-FINTECH-THESIS.md) for how they connect.
