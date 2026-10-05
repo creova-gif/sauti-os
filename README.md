@@ -5,79 +5,50 @@
 [![Status](https://img.shields.io/badge/status-active_development-yellow)]()
 [![License](https://img.shields.io/badge/license-proprietary-red)]()
 
----
+## Overview
+Back-office tooling for independent artists and their managers.
 
-## What this is
+## Problem
+Independent artists lack the royalty administration, airplay tracking, and contract management that major-label rosters take for granted — particularly relevant in African music markets where royalty administration is fragmented across broadcasters, PROs, and manual tracking.
 
-Sauti OS gives independent artists and their managers the back-office tooling that major-label rosters take for granted: airplay tracking, royalty calculation, contract management, and event bookings, in one system built around how music businesses actually operate — particularly relevant for African music markets where royalty administration is often fragmented across broadcasters, PROs, and manual tracking.
+## Solution
+Airplay tracking, royalty calculation and distribution, contract management, catalog management, and event bookings in one system.
 
----
+## Key Capabilities
+- Airplay tracking, artist/roster management
+- Royalty calculation and distribution tracking
+- Contract and catalog management, event bookings
 
-## Core Features
+## Architecture
+Node.js, pnpm monorepo. `artifacts/api-server` is the real backend. Referenced in the [East Africa Fintech Thesis](https://github.com/creova-gif/creova/blob/main/EAST-AFRICA-FINTECH-THESIS.md) as a potential middle layer between artists and Kultr-Hub's payout system for royalty disbursement — that integration is proposed, not yet built.
 
-- **Airplay tracking** — monitor where and how often songs are played
-- **Artist management** — artist profiles and roster management
-- **Royalties** — royalty calculation and distribution tracking
-- **Contracts** — artist and licensing contract management
-- **Songs** — catalog management
-- **Events** — booking and event tracking
-- **Dashboard** — overview across artists, songs, and revenue
-
----
-
-## Tech Stack
+## Technology Stack
 
 | Layer | Technology |
 |---|---|
-| Backend | Node.js, pnpm monorepo |
-| Architecture | API server (`artifacts/api-server`) |
+| Monorepo | pnpm workspaces |
+| Backend | Node.js (`artifacts/api-server`) |
 
----
-
-## Getting Started (Local Dev)
-
-### Prerequisites
-- Node.js 18+
-- **pnpm** (enforced via preinstall check)
-
-### Installation
-
+## Getting Started
 ```bash
 git clone https://github.com/creova-gif/sauti-os.git
 cd sauti-os
 pnpm install
 pnpm run build
 ```
+Run locally: `pnpm --filter @workspace/sauti-os run dev` and `pnpm --filter @workspace/api-server run dev`.
 
-Run the app locally with `pnpm --filter @workspace/sauti-os run dev` and the API server with `pnpm --filter @workspace/api-server run dev`.
-
----
-
-## Roadmap / Status
-
-Core routes implemented: airplay, artist, contracts, dashboard, events, royalties, songs. A `.env.example` should be added for onboarding new developers.
-
-**Worth noting:** this pairs naturally with `Kultr-Hub` (M-Pesa / MTN Mobile Money / Paystack payment rails) for actually disbursing royalty payouts to African artists — worth confirming whether that integration is intentional and documenting the relationship between the two repos if so.
+## Project Status
+Core routes implemented (airplay, artist, contracts, dashboard).
 
 ## Contributing
-
-This is a private, proprietary CREOVA product. External contributions are not accepted at this time.
+Private, proprietary CREOVA product.
 
 ## License
+Proprietary — All Rights Reserved.
 
-Proprietary — All Rights Reserved. See `LICENSE`.
+## Author / Organization
+Built by [Justin Mafie](https://github.com/creova-gif) under CREOVA.
 
-## Credits
-
-Built by CREOVA. Product lead: Justin Mafie.
-
-
-## Related Products
-
-This is one of three connected CREOVA products forming a single East African fintech / creator-economy thesis: the business logic layer that calculates what artists are owed and why. See [Gopay](https://github.com/creova-gif/Gopay), [Kultr-Hub](https://github.com/creova-gif/Kultr-Hub), and the full [East Africa Fintech Thesis](https://github.com/creova-gif/CREOVA/blob/main/EAST-AFRICA-FINTECH-THESIS.md) for how they connect.
-
----
-
-## Ecosystem context
-
-This repo is one of three pieces of a broader East Africa fintech and creator-economy thesis, alongside `Gopay`, `Sauti-Os`, and `Kultr-Hub`. See [`EAST-AFRICA-FINTECH-THESIS.md`](https://github.com/creova-gif/CREOVA/blob/main/EAST-AFRICA-FINTECH-THESIS.md) in the CREOVA repo for how these connect — and an honest accounting of what's actually integrated today versus what's still conceptual.
+## Documentation
+See `CLAUDE.md` and the [East Africa Fintech Thesis](https://github.com/creova-gif/creova/blob/main/EAST-AFRICA-FINTECH-THESIS.md) for the proposed (not yet built) integration with Kultr-Hub.
